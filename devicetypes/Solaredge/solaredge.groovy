@@ -102,6 +102,18 @@ metadata {
 	}
 }
 
+def installed() {
+	log.debug "Installing Solaredge Monitoring..."
+
+    refresh()
+}
+
+
+def updated() {
+	log.debug "Updating Solaredge Monitoring..."
+
+    refresh()
+}
 
 // parse events into attributes
 def parse(String description) {
