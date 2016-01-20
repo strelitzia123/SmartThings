@@ -536,7 +536,7 @@ def turnOff(plug) {
     log.debug "plug.deviceNetworkId ${plug.deviceNetworkId}"
 
     def eventParams = [
-            uri: "https://app11pub.smappee.net",
+            uri: "https://app1pub.smappee.net",
             path: "/dev/v1/servicelocation/${state.serviceLocationId}/actuator/${plug.deviceNetworkId-"Smappee Plug:"}/off",
             headers: ["Authorization": "Bearer ${state.authToken}"],
             body: "{}"
