@@ -84,9 +84,9 @@ def init() {
             state: state.oauthInitState,
             redirect_uri: "https://graph-eu01-euwest1.api.smartthings.com/api/token/${state.accessToken}/smartapps/installations/${app.id}/receiveToken"
     ]
-
-    log.debug "https://farm1pub.smappee.net/dev/v1/oauth2/authorize?${toQueryString(oauthParams)}"
-    redirect(location: "https://farm1pub.smappee.net/dev/v1/oauth2/authorize?${toQueryString(oauthParams)}")
+// try changing https://farm1pub.smappee.net to https://app1pub.smappee.net/dev/v1/servicelocation
+    log.debug "https://app1pub.smappee.net/dev/v1/oauth2/authorize?${toQueryString(oauthParams)}"
+    redirect(location: "https://app1pub.smappee.net/dev/v1/oauth2/authorize?${toQueryString(oauthParams)}")
 }
 
 /*2. Obtain authorization_code, access_token, refresh_token to be used with API calls
@@ -106,7 +106,7 @@ def receiveToken() {
             redirect_uri: "https://graph-eu01-euwest1.api.smartthings.com/api/token/${state.accessToken}/smartapps/installations/${app.id}/receiveToken"
     ]
 
-    def tokenUrl = "https://farm1pub.smappee.net/dev/v1/oauth2/token?${toQueryString(tokenParams)}"
+    def tokenUrl = "https://app1pub.smappee.net/dev/v1/oauth2/token?${toQueryString(tokenParams)}"
     log.debug "url to get tokens: $tokenUrl"
     try {
         httpGet(uri: tokenUrl) { resp ->
@@ -249,7 +249,7 @@ def getSmappeeDevices() {
 
     //Step1: GET locations - return state.locationId, state.locationName,  state.locationZipcode
     def deviceLocationsParams = [
-            uri: "https://farm1pub.smappee.net",
+            uri: "https://app1pub.smappee.net",
             path: "/dev/v1/servicelocation",
             headers: ["Authorization": "Bearer ${state.authToken}"]
     ]
@@ -281,7 +281,7 @@ def getSmappeeDevices() {
     def dni
 
     def deviceListParams = [
-            uri: "https://farm1pub.smappee.net",
+            uri: "https://app1pub.smappee.net",
             path: "/dev/v1/servicelocation/${state.serviceLocationId}/info",
             headers: ["Authorization": "Bearer ${state.authToken}"],
     ]
@@ -432,7 +432,7 @@ def pollChildren(child=null)  {
     log.debug "pollChildren() is called at ${now()}"
     def result = false
     def deviceListParams = [
-            uri: "https://farm1pub.smappee.net",
+            uri: "https://app1pub.smappee.net",
             path: "/dev/v1/servicelocation/${state.serviceLocationId}/recent",
             headers: ["Authorization": "Bearer ${state.authToken}"],
     ]
@@ -493,7 +493,7 @@ def refreshToken() {
             redirect_uri: "https://graph-eu01-euwest1.api.smartthings.com/api/token/${state.accessToken}/smartapps/installations/${app.id}/receiveToken"
     ]
 
-    def tokenUrl = "https://farm1pub.smappee.net/dev/v1/oauth2/token?${toQueryString(tokenParams)}"
+    def tokenUrl = "https://app1pub.smappee.net/dev/v1/oauth2/token?${toQueryString(tokenParams)}"
     log.debug "url to get tokens: $tokenUrl"
 
     try {
@@ -517,7 +517,7 @@ def turnOn(plug) {
     log.debug "plug.deviceNetworkId ${plug.deviceNetworkId}"
 
     def eventParams = [
-            uri: "https://farm1pub.smappee.net",
+            uri: "https://app1pub.smappee.net",
             path: "/dev/v1/servicelocation/${state.serviceLocationId}/actuator/${plug.deviceNetworkId-"Smappee Plug:"}/on",
             headers: ["Authorization": "Bearer ${state.authToken}"],
             body: "{}"
@@ -536,7 +536,7 @@ def turnOff(plug) {
     log.debug "plug.deviceNetworkId ${plug.deviceNetworkId}"
 
     def eventParams = [
-            uri: "https://farm1pub.smappee.net",
+            uri: "https://app11pub.smappee.net",
             path: "/dev/v1/servicelocation/${state.serviceLocationId}/actuator/${plug.deviceNetworkId-"Smappee Plug:"}/off",
             headers: ["Authorization": "Bearer ${state.authToken}"],
             body: "{}"
