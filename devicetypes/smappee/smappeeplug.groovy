@@ -12,6 +12,8 @@
  *  on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License
  *  for the specific language governing permissions and limitations under the License.
  *
+ * Modifications by D Tucker
+ * 
  */
 metadata {
     definition (name: "Smappee Plug", namespace: "smappee", author: "Chuck J") {
@@ -27,7 +29,7 @@ metadata {
     // UI tile definitions
     tiles(scale: 2) {
         multiAttributeTile(name: "button", type: "generic", width: 6, height: 4) {
-            tileAttribute("device.switch", key: "PRIMARY_CONTROL") {
+            tileAttribute("device.switch", key: "PRIMARY_CONTROL", canChangeIcon: true) {
                 attributeState "off", label: 'Off', action: "switch.on", icon: "st.switches.switch.off", backgroundColor: "#ffffff", nextState: "on"
                 attributeState "on", label: 'On', action: "switch.off", icon: "st.switches.switch.on", backgroundColor: "#79b821", nextState: "off"
             }
