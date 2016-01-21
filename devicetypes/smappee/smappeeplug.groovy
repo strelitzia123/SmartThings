@@ -28,8 +28,8 @@ metadata {
 
     // UI tile definitions
     tiles(scale: 2) {
-        multiAttributeTile(name: "button", type: "generic", width: 6, height: 4) {
-            tileAttribute("device.switch", key: "PRIMARY_CONTROL", canChangeIcon: true) {
+        multiAttributeTile(name: "button", type: "generic", width: 6, height: 4, canChangeIcon: true) {
+            tileAttribute("device.switch", key: "PRIMARY_CONTROL") {
                 attributeState "off", label: 'Off', action: "switch.on", icon: "st.switches.switch.off", backgroundColor: "#ffffff", nextState: "on"
                 attributeState "on", label: 'On', action: "switch.off", icon: "st.switches.switch.on", backgroundColor: "#79b821", nextState: "off"
             }
