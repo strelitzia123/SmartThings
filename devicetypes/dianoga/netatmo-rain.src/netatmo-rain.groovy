@@ -15,9 +15,10 @@
  */
 metadata {
 	definition (name: "Netatmo Rain", namespace: "dianoga", author: "Brian Steere") {
-		capability "Sensor"
 	
-		attribute "rain", "number"
+	capability "Water Sensor"
+        capability "Sensor"
+        attribute "rain", "number"
         attribute "rainSumHour", "number"
         attribute "rainSumDay", "number"
         attribute "units", "string"
@@ -30,6 +31,11 @@ metadata {
 	}
 
 	tiles {
+    	standardTile("water", "device.water", width: 2, height: 2) {
+			state "dry", icon:"st.alarm.water.dry", backgroundColor:"#ffffff", action: "wet"
+			state "wet", icon:"st.alarm.water.wet", backgroundColor:"#53a7c0", action: "dry"
+		}
+
  		valueTile("rain", "device.rain", width: 2, height: 2, inactiveLabel: false) {
  			state "default", label:'${currentValue}'
  		}
@@ -54,4 +60,13 @@ def parse(String description) {
 
 def poll() {
 	parent.poll()
+}
+def wet() {
+	log.trace "wet()"
+	sendEvent(name: "water", value: "wet")
+}
+
+def dry() {
+	log.trace "dry()"
+	sendEvent(name: "water", value: "dry")
 }
