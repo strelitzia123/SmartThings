@@ -15,12 +15,10 @@
  */
 metadata {
 	definition (name: "Netatmo Additional Module", namespace: "dianoga", author: "Brian Steere") {
-		capability "Sensor"
 		capability "Relative Humidity Measurement"
 		capability "Temperature Measurement"
-    capability "Carbon Dioxide Measurement"
 
-//		attribute "carbonDioxide", "string"
+		attribute "carbonDioxide", "string"
 	}
 
 	simulator {
