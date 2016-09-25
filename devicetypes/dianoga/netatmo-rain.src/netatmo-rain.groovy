@@ -49,7 +49,7 @@ metadata {
  			state "default", action:"refresh.poll", icon:"st.secondary.refresh"
  		}
  		main (["rain", "rainSumHour", "rainSumDay"])
- 		details(["rain", "rainSumHour", "rainSumDay", "refresh"])
+ 		details(["rain", "rainSumHour", "rainSumDay", "water", "refresh"])
 	}
 }
 
