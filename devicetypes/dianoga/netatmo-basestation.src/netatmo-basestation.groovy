@@ -19,9 +19,10 @@ metadata {
 		capability "Relative Humidity Measurement"
 		capability "Temperature Measurement"
 		capability "Carbon Dioxide Measurement"
+		capability "Sound Pressure Level"
 
 		//attribute "carbonDioxide", "string"
-		attribute "noise", "string"
+		//attribute "noise", "string"
 		attribute "pressure", "string"
 	}
 
@@ -55,14 +56,17 @@ metadata {
  		valueTile("noise", "device.noise", inactiveLabel: false) {
  			state "noise", label:'${currentValue}db', unit:"Noise"
  		}
+		valueTile("sound", "device.soundPressureLevel", inactiveLabel: false) {
+ 			state "soundPressureLevel", label:'${currentValue}db', unit:"soundPressureLevel"
+ 		}
  		valueTile("pressure", "device.pressure", inactiveLabel: false) {
  			state "pressure", label:'${currentValue}mbar', unit:"Pressure"
  		}
  		standardTile("refresh", "device.pressure", inactiveLabel: false, decoration: "flat") {
  			state "default", action:"device.poll", icon:"st.secondary.refresh"
  		}
- 		main(["temperature", "humidity", "carbonDioxide", "noise", "pressure"])
- 		details(["temperature", "humidity", "carbonDioxide", "noise", "pressure", "refresh"])
+ 		main(["temperature", "humidity", "carbonDioxide", "sound", "pressure"])
+ 		details(["temperature", "humidity", "carbonDioxide", "sound", "pressure", "refresh"])
 	}
 }
 
