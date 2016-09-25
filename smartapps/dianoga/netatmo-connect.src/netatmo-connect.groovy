@@ -500,6 +500,7 @@ def poll() {
 				child?.sendEvent(name: 'humidity', value: data['Humidity'])
 				child?.sendEvent(name: 'pressure', value: data['Pressure'])
 				child?.sendEvent(name: 'noise', value: data['Noise'])
+				child?.sendEvent(name: 'soundPressureLevel', value: data['Noise'])
 				break;
 			case 'NAModule1':
 				log.debug "Updating NAModule1 $data"
