@@ -51,6 +51,7 @@ metadata {
         attribute "load", "number"
         attribute "powerMode", "string"
         attribute "logonTime", "string"
+	attribute "power_details", "string"
         
 
         // Custom commands
@@ -58,8 +59,22 @@ metadata {
     }
 
     tiles (scale :2) {
-    
-            multiAttributeTile(name:"power", type:"generic", width:6, height:4) {
+   		 // this tile is used for display in device list (to get correct colorization)
+		valueTile(
+			"power",
+			"device.power") {
+				state("power",
+					label: '${currentValue}W',
+					unit: "W",
+					icon: "https://raw.githubusercontent.com/ahndee/Envoy-ST/master/devicetypes/aamann/enlighten-envoy-local.src/Solar.png",
+					backgroundColors: [
+						[value: 0, color: "#bc2323"],
+						[value: 3000, color: "#1e9cbb"],
+						[value: 6000, color: "#90d2a7"]
+					])
+		}
+	    
+            multiAttributeTile(name:"PowerMulti", type:"generic", width:6, height:4) {
             tileAttribute("device.power", key: "PRIMARY_CONTROL") {
                 attributeState "default", label:'${currentValue}W', backgroundColors: [ 
                      [value: -1, color: "#00FF00"], 
@@ -72,6 +87,28 @@ metadata {
 			}
             
         }
+	    // the following tiles are used for display in the device handler
+		multiAttributeTile(
+			name:"SolarMulti",
+			type:"generic",
+			width:6,
+			height:4) {
+				tileAttribute("device.power", key: "PRIMARY_CONTROL") {
+					attributeState("power",
+						label: '${currentValue}W',
+						icon: "https://raw.githubusercontent.com/ahndee/Envoy-ST/master/devicetypes/aamann/enlighten-envoy-local.src/Solar-2.png",
+						unit: "W",
+						backgroundColors: [
+							[value: 0, color: "#bc2323"],
+							[value: 3000, color: "#1e9cbb"],
+							[value: 6000, color: "#90d2a7"]
+						])
+			}
+			tileAttribute("device.power_details", key: "SECONDARY_CONTROL") {
+				attributeState("power_details",
+					label: '${currentValue}')
+			}
+		}
     /*
         valueTile("power", "device.power", width: 4, height: 4) {
 			state "power", label:'${currentValue}W\nImport Export', unit:"W", backgroundColors: [ 
@@ -120,9 +157,9 @@ metadata {
         }
 
 
-        main(["power"])
+        main "power"
 
-        details(["power", "solar", "powerMode", "load", "refresh", "logon"])
+        details(["PowerMulti", "SolarMulti", "solar", "powerMode", "load", "refresh", "logon"])
          
     }
 
