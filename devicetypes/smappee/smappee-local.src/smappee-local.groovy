@@ -52,6 +52,9 @@ metadata {
         attribute "powerMode", "string"
         attribute "logonTime", "string"
 	attribute "power_details", "string"
+	attribute "power_str", "string"
+	attribute "solar_str", "string"
+	attribute "load_str", "string"
         
 
         // Custom commands
@@ -155,7 +158,12 @@ metadata {
 		standardTile("logon", "device.thermostatMode", inactiveLabel:false, decoration:"flat") {
             state "default", action:"logOnSmappee", label: "LogOn"
         }
-
+	htmlTile(name:"graphHTML",
+			action: "getGraphHTML",
+			refreshInterval: 1,
+			width: 6,
+			height: 4,
+			whitelist: ["www.gstatic.com"])
 
         main "power"
 
@@ -167,6 +175,13 @@ metadata {
         
     }
 }
+
+mappings {
+	path("/getGraphHTML") {action: [GET: "getGraphHTML"]}
+}
+
+
+
 
 def updated() {
 	//log.debug "In Updated()"
@@ -423,7 +438,8 @@ private def parseTstatData(tstat) {
     	def currentPower = tstat.value[1] as double
         def currentSolar = tstat.value[4] as double
         def currentLoad = tstat.value[7] as double
-        
+        def power_str = (tstat.value[1]/1000).toFloat()
+	LOG("power_str (${power_str})")
         currentPower=currentPower/1000
         currentPower=currentPower.round(0)
         
