@@ -438,7 +438,7 @@ private def parseTstatData(tstat) {
     	def currentPower = tstat.value[1] as double
         def currentSolar = tstat.value[4] as double
         def currentLoad = tstat.value[7] as double
-        def power_str = (tstat.value[1]/1000).toFloat()
+        def power_str = (tstat.value[1]).toFloat()
 	LOG("power_str (${power_str})")
         currentPower=currentPower/1000
         currentPower=currentPower.round(0)
