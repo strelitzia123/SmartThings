@@ -490,20 +490,20 @@ def poll() {
 
 		log.debug "Update: $child";
 		switch(detail?.type) {
+			
 			case 'NHC':
 				log.debug "Updating NHC $data"
 				child?.sendEvent(name: 'temperature', value: cToPref(data['Temperature']) as float, unit: getTemperatureScale())
 				child?.sendEvent(name: 'carbonDioxide', value: data['CO2'], unit: "ppm")
 				child?.sendEvent(name: 'humidity', value: data['Humidity'], unit: "%")
-                child?.sendEvent(name: 'temp_trend', value: data['temp_trend'], unit: "")                
-                child?.sendEvent(name: 'pressure', value: (pressToPref(data['Pressure'])).toDouble().trunc(2), unit: settings.pressUnits)
-				child?.sendEvent(name: 'soundPressureLevel', value: data['Noise'], unit: "db")
-                child?.sendEvent(name: 'pressure_trend', value: data['pressure_trend'], unit: "")
-                child?.sendEvent(name: 'min_temp', value: cToPref(data['min_temp']) as float, unit: getTemperatureScale())
-                child?.sendEvent(name: 'max_temp', value: cToPref(data['max_temp']) as float, unit: getTemperatureScale())
-                child?.sendEvent(name: 'units', value: settings.pressUnits)
+                		child?.sendEvent(name: 'temp_trend', value: data['temp_trend'], unit: "")                
+                		child?.sendEvent(name: 'soundPressureLevel', value: data['Noise'], unit: "db")
+                		child?.sendEvent(name: 'pressure_trend', value: data['pressure_trend'], unit: "")
+                		child?.sendEvent(name: 'min_temp', value: cToPref(data['min_temp']) as float, unit: getTemperatureScale())
+                		child?.sendEvent(name: 'max_temp', value: cToPref(data['max_temp']) as float, unit: getTemperatureScale())
+                		child?.sendEvent(name: 'units', value: settings.pressUnits)
                 
-                child?.sendEvent(name: 'lastupdate', value: lastUpdated(data['time_utc']), unit: "")
+                		child?.sendEvent(name: 'lastupdate', value: lastUpdated(data['time_utc']), unit: "")
 				log.debug "sent time ${lastUpdated(data['time_utc'])}"
 				break;
 		}
@@ -524,33 +524,9 @@ def cToPref(temp) {
     }
 }
 
-def rainToPref(rain) {
-	if(settings.rainUnits == 'mm') {
-    	return rain
-    } else {
-    	return rain * 0.039370
-    }
-}
 
-def pressToPref(Pressure) {
-	if(settings.pressUnits == 'mbar') {
-    	return Pressure
-    } else {
-    	return Pressure * 0.029530
-    }
-}
 
-def windToPref(Wind) {
-	if(settings.windUnits == 'kph') {
-    	return Wind
-    } else if (settings.windUnits == 'ms') {
-    	return Wind * 0.277778
-    } else if (settings.windUnits == 'mph') {
-    	return Wind * 0.621371192
-    } else if (settings.windUnits == 'kts') {
-    	return Wind * 0.539956803
-    }
-}
+
 
 def debugEvent(message, displayEvent) {
 
