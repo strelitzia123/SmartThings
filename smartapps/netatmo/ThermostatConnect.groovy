@@ -23,7 +23,7 @@ definition(
 	namespace: "strelitzia123",
 	author: "Brian Steere,cscheiene, bdobrescu, strelitzia123",
 	description: "Netatmo Integration",
-	category: "SmartThings Labs",
+	category: "My Apps",
 	iconUrl: "https://s3.amazonaws.com/smartapp-icons/Partner/netamo-icon-1.png",
 	iconX2Url: "https://s3.amazonaws.com/smartapp-icons/Partner/netamo-icon-1%402x.png",
 	oauth: true,
