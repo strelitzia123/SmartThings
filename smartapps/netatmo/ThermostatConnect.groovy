@@ -1,5 +1,5 @@
 /**
- * Netatmo Connect Date: 15.05.2017
+ * Netatmo Connect Date: 26.11.2017
  */
 
 import java.text.DecimalFormat
@@ -19,9 +19,9 @@ private getBuildRedirectUrl() { "${serverUrl}/oauth/initialize?appId=${app.id}&a
 
 // Automatically generated. Make future change here.
 definition(
-	name: "Netatmo - Health Coach (Connect)",
-	namespace: "cscheiene",
-	author: "Brian Steere,cscheiene, bdobrescu",
+	name: "Netatmo - Thermostat (Connect)",
+	namespace: "strelitzia123",
+	author: "Brian Steere,cscheiene, bdobrescu, strelitzia123",
 	description: "Netatmo Integration",
 	category: "SmartThings Labs",
 	iconUrl: "https://s3.amazonaws.com/smartapp-icons/Partner/netamo-icon-1.png",
@@ -111,7 +111,8 @@ def oauthInitUrl() {
 		client_secret: getClientSecret(),
 		state: state.oauthInitState,
 		redirect_uri: getCallbackUrl(),
-		scope: "read_homecoach"
+		//scope: "read_homecoach"
+		scope: "read_thermostat"
 	]
 
 	// log.debug "REDIRECT URL: ${getVendorAuthPath() + toQueryString(oauthParams)}"
@@ -133,7 +134,8 @@ def callback() {
 			grant_type: "authorization_code",
 			redirect_uri: getCallbackUrl(),
 			code: code,
-			scope: "read_homecoach"
+			//scope: "read_homecoach"
+			scope: "read_thermostat"
 		]
 
 		// log.debug "TOKEN URL: ${getVendorTokenPath() + toQueryString(tokenParams)}"
@@ -342,9 +344,12 @@ def initialize() {
 
 		try {
 			switch(detail?.type) {
-				case 'NHC':
-					log.debug "My Health Coach Unit"
-					createChildDevice("Netatmo Health Coach", deviceId, "${detail.type}.${deviceId}", detail.module_name)
+				case 'NAPlug':
+					log.debug "Thermostat Relay"
+					createChildDevice("Netatmo Thermostat Relay", deviceId, "${detail.type}.${deviceId}", detail.module_name)
+				case 'NATherm1':
+					log.debug "Thermostat module"
+					createChildDevice("Netatmo Thermostat module", deviceId, "${detail.type}.${deviceId}", detail.module_name)
 					break
             }
 		} catch (Exception e) {
@@ -376,7 +381,8 @@ def moduleName = null
 state.deviceDetail = [:]
 state.deviceState = [:]
 def response
-apiGet("/api/gethomecoachsdata",["get_favorites":true]) { resp ->
+// apiGet("/api/gethomecoachsdata",["get_favorites":true]) { resp ->
+apiGet("/api/getthermostatsdata",["get_favorites":true]) { resp ->	
     	state.response = resp.data.body
         log.debug "response = $state.response"
         resp.data.body.devices.each { value ->
@@ -430,11 +436,11 @@ def listDevices() {
 			input "devices", "enum", title: "Select Device(s)", required: false, multiple: true, options: devices
 		}
 
-        section("Preferences") {
+/*        section("Preferences") {
         	input "rainUnits", "enum", title: "Rain Units", description: "Please select rain units", required: true, options: [mm:'Millimeters', in:'Inches']
             input "pressUnits", "enum", title: "Pressure Units", description: "Please select pressure units", required: true, options: [mbar:'mbar', inhg:'inhg']            
             input "windUnits", "enum", title: "Wind Units", description: "Please select wind units", required: true, options: [kph:'kph', ms:'ms', mph:'mph', kts:'kts']
-        }
+        } */
 	}
 }
 
