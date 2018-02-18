@@ -41,14 +41,12 @@ mappings {
 
 def authPage() {
 	log.debug "In authPage"
-	if(canInstallLabs()) {
-		def description = null
+	def description = null
+	if (state.vendorAccessToken == null) {
+	log.debug "About to create access token."
 
-		if (state.vendorAccessToken == null) {
-			log.debug "About to create access token."
-
-			createAccessToken()
-			description = "Tap to enter Credentials."
+	createAccessToken()
+	description = "Tap to enter Credentials."
 
 			return dynamicPage(name: "Credentials", title: "Authorize Connection", nextPage:"listDevices", uninstall: true, install:false) {
 				section { href url:buildRedirectUrl("auth"), style:"embedded", required:false, title:"Connect to ${getVendorName()}:", description:description }
@@ -60,21 +58,7 @@ def authPage() {
 				section { href url: buildRedirectUrl("receivedToken"), style:"embedded", required:false, title:"${getVendorName()} is now connected to SmartThings!", description:description }
 			}
 		}
-	}
-	else
-	{
-		def upgradeNeeded = """To use SmartThings Labs, your Hub should be completely up to date.
-
-To update your Hub, access Location Settings in the Main Menu (tap the gear next to your location name), select your Hub, and choose "Update Hub"."""
-
-
-		return dynamicPage(name:"Credentials", title:"Upgrade needed!", nextPage:"", install:false, uninstall: true) {
-			section {
-				paragraph "$upgradeNeeded"
-			}
-		}
-
-	}
+	
 }
 
 def auth() {
@@ -233,7 +217,7 @@ def receivedToken() {
         <html>
         <head>
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Withings Connection</title>
+        <title>${getVendorName()} Connection</title>
         <style type="text/css">
             * { box-sizing: border-box; }
             @font-face {
@@ -375,47 +359,6 @@ def initialize() {
     }
     
     
-		//			createChildDevice("Netatmo Thermostat Module", deviceId, "NATherm1.${deviceId}", "Thermostat")
-    /*
-    settings.devices.each {
-		def deviceId = it
-        log.debug it
-		def detail = state.deviceDetail[deviceId]
-        log.debug state.deviceDetail[deviceId]
-		log.debug "detail: $detail"
-		try {
-			switch(detail.type) {
-				case 'NAMain':
-					log.debug "Base station"
-					createChildDevice("Netatmo Basestation", deviceId, "${detail.type}.${deviceId}", detail.module_name)
-					break
-				case 'NAModule1':
-					log.debug "Outdoor module"
-					createChildDevice("Netatmo Outdoor Module", deviceId, "${detail.type}.${deviceId}", detail.module_name)
-					break
-				case 'NAModule3':
-					log.debug "Rain Gauge"
-					createChildDevice("Netatmo Rain", deviceId, "${detail.type}.${deviceId}", detail.module_name)
-					break
-				case 'NAModule4':
-					log.debug "Additional module"
-					createChildDevice("Netatmo Additional Module", deviceId, "${detail.type}.${deviceId}", detail.module_name)
-					break
-                case 'NAPlug':
-					log.debug "Thermostat relay/plug"
-					createChildDevice("Netatmo RelayPlug", deviceId, "${detail.type}.${deviceId}", detail.module_name)
-					break
-                case 'NATherm1':
-					log.debug "Thermostat module"
-					createChildDevice("Netatmo Thermostat Module", deviceId, "${detail.type}.${deviceId}", detail.module_name)
-					break
-			}
-		} catch (Exception e) {
-			log.error "Error creating device: ${e}"
-		}
-	}
-	*/
-    
 	// Cleanup any other devices that need to go away
 	def delete = getChildDevices().findAll { !settings.devices.contains(it.deviceNetworkId) }
 	log.debug "Delete: $delete"
@@ -429,7 +372,6 @@ def initialize() {
 
 def uninstalled() {
 	log.debug "In uninstalled"
-
 	removeChildDevices(getChildDevices())
 }
 
@@ -675,48 +617,7 @@ def getthermostatsdata() {
 				//child?.sendEvent(name: 'carbonDioxide', value: data['CO2'])
 				//child?.sendEvent(name: 'humidity', value: data['Humidity'])
                 
-        /*switch(detail.type) {
-			case 'NAMain':
-				log.debug "Updating NAMain $data"
-				child?.sendEvent(name: 'temperature', value: cToPref(data['Temperature']) as float, unit: getTemperatureScale())
-				child?.sendEvent(name: 'carbonDioxide', value: data['CO2'])
-				child?.sendEvent(name: 'humidity', value: data['Humidity'])
-				child?.sendEvent(name: 'pressure', value: data['Pressure'])
-				child?.sendEvent(name: 'noise', value: data['Noise'])
-				break;
-			case 'NAModule1':
-				log.debug "Updating NAModule1 $data"
-				child?.sendEvent(name: 'temperature', value: cToPref(data['Temperature']) as float, unit: getTemperatureScale())
-				child?.sendEvent(name: 'humidity', value: data['Humidity'])
-				break;
-			case 'NAModule3':
-				log.debug "Updating NAModule3 $data"
-				child?.sendEvent(name: 'rain', value: rainToPref(data['Rain']) as float, unit: settings.rainUnits)
-				child?.sendEvent(name: 'rainSumHour', value: rainToPref(data['sum_rain_1']) as float, unit: settings.rainUnits)
-				child?.sendEvent(name: 'rainSumDay', value: rainToPref(data['sum_rain_24']) as float, unit: settings.rainUnits)
-				child?.sendEvent(name: 'units', value: settings.rainUnits)
-				break;
-			case 'NAModule4':
-				log.debug "Updating NAModule4 $data"
-				child?.sendEvent(name: 'temperature', value: cToPref(data['Temperature']) as float, unit: getTemperatureScale())
-				child?.sendEvent(name: 'carbonDioxide', value: data['CO2'])
-				child?.sendEvent(name: 'humidity', value: data['Humidity'])
-				break;
-             case 'NAPlug':
-				log.debug "Updating NAPlug $data"
-				child?.sendEvent(name: 'temperature', value: cToPref(data['Temperature']) as float, unit: getTemperatureScale())
-				child?.sendEvent(name: 'carbonDioxide', value: data['CO2'])
-				child?.sendEvent(name: 'humidity', value: data['Humidity'])
-				break;
-             case 'NATherm1':
-				log.debug "Updating NATherm1 $data"
-				child?.sendEvent(name: 'temperature', value: cToPref(data['Temperature']) as float, unit: getTemperatureScale())
-				child?.sendEvent(name: 'carbonDioxide', value: data['CO2'])
-				child?.sendEvent(name: 'humidity', value: data['Humidity'])
-				break;
-                
-		}
-        */
+        
 	}
 }
 
@@ -760,13 +661,7 @@ def cToPref(temp) {
     }
 }
 
-def rainToPref(rain) {
-	if(settings.rainUnits == 'mm') {
-    	return rain
-    } else {
-    	return rain * 0.039370
-    }
-}
+
 
 def debugEvent(message, displayEvent) {
 
@@ -778,16 +673,4 @@ def debugEvent(message, displayEvent) {
 	log.debug "Generating AppDebug Event: ${results}"
 	sendEvent (results)
 
-}
-
-private Boolean canInstallLabs() {
-	return hasAllHubsOver("000.011.00603")
-}
-
-private Boolean hasAllHubsOver(String desiredFirmware) {
-	return realHubFirmwareVersions.every { fw -> fw >= desiredFirmware }
-}
-
-private List getRealHubFirmwareVersions() {
-	return location.hubs*.firmwareVersionString.findAll { it }
 }
